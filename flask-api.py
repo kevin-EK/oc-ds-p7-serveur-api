@@ -14,31 +14,14 @@ path_server = 'http://127.0.0.1:5000/'
 def get_agg_data():
     # amelioration création base de données
     try:                
-        # pour recuperer les resultats use open url
-        # important_features = joblib.load('support/data/list_col_to_keep.joblib')
-        # data1 = pd.read_csv("support/data/application_train.csv", usecols=important_features+['TARGET','SK_ID_CURR'] )
-        # data2 = pd.read_csv("support/data/application_test.csv",  usecols= important_features+['SK_ID_CURR'] )
-
+        # load data
         data1 = joblib.load("support/data/application_train.sav")
         data1 = data1[important_features+['TARGET','SK_ID_CURR']]
         data2 = joblib.load("support/data/application_test.sav")
         data2 = data2[important_features+['SK_ID_CURR']]
     
-        # Données numériques
-        ## number_data = data1.select_dtypes(include = np.number).groupby(['TARGET']).agg(pd.Series.median).T
-    
-        # Données catégorielles
-        ## categ_data_data = data1.groupby(['TARGET']).agg(pd.Series.mode).select_dtypes(exclude = np.number).T
-    
-        ## data_agg = pd.concat([number_data, categ_data_data],axis=0)
-        ## data_agg.reset_index(inplace=True)
-        ## data_agg.rename(columns={'index':'info', 0:'Bon', 1:'Mauvais'},inplace = True)
-        
+        # feature engenering
         data = pd.concat([data1, data2],axis=0).drop_duplicates()
-        # data = pd.concat([data1.drop(columns = ['TARGET']), data2],axis=0).drop_duplicates()
-        # Some simple new features (percentages)
-        #data['INCOME_CREDIT_PERC'] = data['AMT_INCOME_TOTAL'] / data['AMT_CREDIT']
-        #data['time_to_repay'] = data['AMT_CREDIT'] / data['AMT_ANNUITY']
         data['ANNUITY_INCOME_PERC'] = data['AMT_ANNUITY'] / data['AMT_INCOME_TOTAL']
         data = data[data['CODE_GENDER'] != 'XNA']
         for bin_feature in ['CODE_GENDER', 'FLAG_OWN_CAR', 'FLAG_OWN_REALTY']:
@@ -54,15 +37,12 @@ def get_agg_data():
 def get_data():
     # amelioration création base de données
     try:
-        # df_train = pd.read_csv('support/data/application_train.csv' )
-        # df_test = pd.read_csv('support/data/application_test.csv' )
+        # load data
         df_train = joblib.load("support/data/application_train.sav")
         df_test = joblib.load("support/data/application_test.sav")
         list_index = list(set(df_train.SK_ID_CURR.to_list() + df_test.SK_ID_CURR.to_list())) # a tester
         #columns_to_keep = joblib.load("support/data/list_col_to_keep.joblib")
         columns_to_keep = important_features
-
-
 
         # concatened dataframe
         data = pd.concat([df_train,df_test], axis = 0)
@@ -72,8 +52,6 @@ def get_data():
 
         #feature ingenering
         data = data[data['CODE_GENDER'] != 'XNA']
-        #data['INCOME_CREDIT_PERC'] = data['AMT_INCOME_TOTAL'] / data['AMT_CREDIT']
-        #data['time_to_repay'] = data['AMT_CREDIT'] / data['AMT_ANNUITY']
         data['ANNUITY_INCOME_PERC'] = data['AMT_ANNUITY'] / data['AMT_INCOME_TOTAL']
         for bin_feature in ['CODE_GENDER', 'FLAG_OWN_CAR', 'FLAG_OWN_REALTY']:
             data[bin_feature], uniques = pd.factorize(data[bin_feature])

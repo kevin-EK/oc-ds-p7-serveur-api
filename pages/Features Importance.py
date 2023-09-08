@@ -16,11 +16,6 @@ if "data" in st.session_state:
     entete.write("la valeur de la page 2 a été récupéré")
     entete.empty()
 
-#joblib.dump(st.session_state.data, "support/data/data_session.sav")
-
-# def st_shap(plot, height=None):
-#     shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
-#     components.html(shap_html, height=height)
 
 st.title("SHAP in Streamlit (SHapley Additive exPlanations)\n")
 
@@ -57,9 +52,6 @@ feature_namestr = [c.replace('num__','').replace('cat__','').replace('disc__',''
 
 # transform data pipeline
 transformed_data = model[:-1].transform(st.session_state.data)
-#transform_datatest = model[:-1].transform(datatest)
-#st.write('Apply DataFrame')
-#st.table(transformed_data[:5,:])
 
 #st.write('Conversion DataFrame')
 transformed_data = pd.DataFrame(transformed_data, columns = feature_namestr )
@@ -74,53 +66,30 @@ explainer = shap.Explainer(model[-1],  )#transformed_data
 #st.write("shap_values")
 if 'shap_values' not in st.session_state:
     shap_values = explainer.shap_values( transformed_data  ) #id = 228316
-    #shap_values = joblib.load('support\data\shap_values.sav')
     st.session_state['shap_values'] = shap_values
 else:
     shap_values = st.session_state['shap_values']
 
 
 # visualize the first prediction's explanation (use matplotlib=True to avoid Javascript)      
-if st.session_state.chosen_radio == 'Index':
-    st.write("L'identifiant choisi est " + str(st.session_state.chosen_customer) )
-    # Force plot
-    # st_shap( 
-    # shap.force_plot(
-    #     explainer.expected_value[0], 
-    #     shap_values[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer,:], 
-    #     transformed_data.loc[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer]
-    #     ), height=300 , width=1000 
-    #     )
-    
+#if st.session_state.chosen_radio == 'Index':
+st.write("L'identifiant choisi est " + str(st.session_state.chosen_customer) )
+# Force plot
+# st_shap( 
+# shap.force_plot(
+#     explainer.expected_value[0], 
+#     shap_values[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer,:], 
+#     transformed_data.loc[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer]
+#     ), height=300 , width=1000 
+#     )
 
-    #Waterfall plot
-    shap_valuesWaterfall = explainer(transformed_data.loc[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer])
-    exp = shap.Explanation(shap_valuesWaterfall.values, 
-                           shap_valuesWaterfall.base_values[0][0], 
-                           transformed_data.loc[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer])
-    st_shap(shap.plots.waterfall(exp[0], max_display = 20), height=1000, width=1000 )
-    
-    #st.write(explainer(transformed_data.loc[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer]).values)
 
-elif st.session_state.chosen_radio == 'Valeur':
-    #st.write( 'Pas encore actif' )
-    #st.write(st.session_state['valuesClient'])
-    data_manu = pd.DataFrame(model[:-1].transform(pd.DataFrame(st.session_state['valuesClient'], index=[0])),
-                             columns= feature_namestr)
-    shap_valuesWaterfall = explainer( data_manu ) 
-    exp = shap.Explanation(shap_valuesWaterfall.values, 
-                           shap_valuesWaterfall.base_values[0][0], 
-                           data_manu#shap_valuesWaterfall.data
-                           )
-    st_shap( shap.plots.waterfall(exp[0], max_display = 20) , width=1000)
-
-    # st_shap( 
-    #     shap.force_plot(
-    #         explainer.expected_value[0], 
-    #         shap_values[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer,:], 
-    #         st.session_state.chosen_radio.valuesClient
-    #         ) 
-    #         )
+#Waterfall plot
+shap_valuesWaterfall = explainer(transformed_data.loc[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer])
+exp = shap.Explanation(shap_valuesWaterfall.values, 
+                        shap_valuesWaterfall.base_values[0][0], 
+                        transformed_data.loc[st.session_state.data.SK_ID_CURR==st.session_state.chosen_customer])
+st_shap(shap.plots.waterfall(exp[0], max_display = 20), height=1000, width=1000 )
 
 # visualize the training set predictions
 #shap.force_plot(shap.force_plot(explainer.expected_value, shap_values, st.session_state.data), 400)
