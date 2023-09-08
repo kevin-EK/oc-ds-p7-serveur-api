@@ -16,7 +16,7 @@ if "data" in st.session_state:
     entete.write("la valeur de la page 2 a été récupéré")
     entete.empty()
 
-joblib.dump(st.session_state.data, "support/data/data_session.sav")
+#joblib.dump(st.session_state.data, "support/data/data_session.sav")
 
 # def st_shap(plot, height=None):
 #     shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
@@ -48,14 +48,12 @@ st.sidebar.markdown("Les valeurs SHAP positives sont interprétées comme augmen
 
 # train XGBoost model
 model = joblib.load("support/models/model.sav")
-st.write("ok1")
 
 # get feature name
 feature_namestr = model[0].get_feature_names_out()
 feature_namestr = [c.replace('num__','').replace('cat__','').replace('disc__','').replace('NAME_EDUCATION_TYPE_','N_EDUC_TYP_')\
                    .replace('ORGANIZATION_TYPE_','ORGA_TYP_').replace('Secondary / secondary special','Secondary special')  for c in feature_namestr]
 
-st.write("ok2")
 
 # transform data pipeline
 transformed_data = model[:-1].transform(st.session_state.data)
