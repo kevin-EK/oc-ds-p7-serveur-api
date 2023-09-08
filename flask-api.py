@@ -120,7 +120,7 @@ def index_predict():
 
 
 
-
+#### test
 @app.route('/predict/index_test',methods=['GET'])
 def index_predict_test():
     # get index
@@ -147,18 +147,21 @@ def index_predict_test():
 
 @app.route('/predict/values',methods=['GET'])
 def values_predict():
-    # get data
-    dict_data = request.args.get('values')
-    # restructuration de la données
-    dict_data = pd.DataFrame(json.loads(dict_data) )
-    # probability
-    probability = model.predict_proba(dict_data)[0][1]
-    #decision
-    decision = model.predict( dict_data) 
-    decision = int( decision )
+    try:
+        # get data
+        dict_data = request.args.get('values')
+        # restructuration de la données
+        dict_data = pd.DataFrame(json.loads(dict_data) )
+        # probability
+        probability = model.predict_proba(dict_data)[0][1]
+        #decision
+        decision = model.predict( dict_data) 
+        decision = int( decision )
+    except Exception as e:
+        return f"prediction NOT available! \n\n Une erreur s'est produite : {e}" 
     return jsonify({'proba':probability, 'decision': classify_mappings[decision]  })
-    # http://127.0.0.1:5000/predict/values?values=%7B%22AMT_ANNUITY%22%3A%7B%220%22%3A16713.0%7D,%22AMT_CREDIT%22%3A%7B%220%22%3A288873.0%7D,%22AMT_INCOME_TOTAL%22%3A%7B%220%22%3A67500.0%7D,%22ANNUITY_INCOME_PERC%22%3A%7B%220%22%3A0.2476%7D,%22CNT_CHILDREN%22%3A%7B%220%22%3A0%7D,%22CODE_GENDER%22%3A%7B%220%22%3A0%7D,%22DAYS_BIRTH%22%3A%7B%220%22%3A-16963%7D,%22DAYS_EMPLOYED%22%3A%7B%220%22%3A-1746%7D,%22EXT_SOURCE_2%22%3A%7B%220%22%3A0.657665461%7D,%22EXT_SOURCE_3%22%3A%7B%220%22%3A0.7091891097%7D,%22FLAG_OWN_CAR%22%3A%7B%220%22%3A0%7D,%22FLAG_OWN_REALTY%22%3A%7B%220%22%3A0%7D,%22INCOME_CREDIT_PERC%22%3A%7B%220%22%3A0.2336666978%7D,%22NAME_EDUCATION_TYPE%22%3A%7B%220%22%3A%22Secondary+%5C%2F+secondary+special%22%7D,%22NAME_FAMILY_STATUS%22%3A%7B%220%22%3A%22Married%22%7D,%22NAME_INCOME_TYPE%22%3A%7B%220%22%3A%22Working%22%7D,%22OCCUPATION_TYPE%22%3A%7B%220%22%3A%22Laborers%22%7D,%22ORGANIZATION_TYPE%22%3A%7B%220%22%3A%22Business+Entity+Type+3%22%7D,%22REG_CITY_NOT_LIVE_CITY%22%3A%7B%220%22%3A0%7D,%22REG_CITY_NOT_WORK_CITY%22%3A%7B%220%22%3A0%7D,%22REG_REGION_NOT_LIVE_REGION%22%3A%7B%220%22%3A0%7D,%22REG_REGION_NOT_WORK_REGION%22%3A%7B%220%22%3A0%7D,%22time_to_repay%22%3A%7B%220%22%3A17.2843295638%7D%7D
-    # https://oc-ds-p7-kevin-el-ce8c86036717.herokuapp.com/predict/values?values=%7B%22AMT_ANNUITY%22%3A%7B%220%22%3A16713.0%7D,%22AMT_CREDIT%22%3A%7B%220%22%3A288873.0%7D,%22AMT_INCOME_TOTAL%22%3A%7B%220%22%3A67500.0%7D,%22ANNUITY_INCOME_PERC%22%3A%7B%220%22%3A0.2476%7D,%22CNT_CHILDREN%22%3A%7B%220%22%3A0%7D,%22CODE_GENDER%22%3A%7B%220%22%3A0%7D,%22DAYS_BIRTH%22%3A%7B%220%22%3A-16963%7D,%22DAYS_EMPLOYED%22%3A%7B%220%22%3A-1746%7D,%22EXT_SOURCE_2%22%3A%7B%220%22%3A0.657665461%7D,%22EXT_SOURCE_3%22%3A%7B%220%22%3A0.7091891097%7D,%22FLAG_OWN_CAR%22%3A%7B%220%22%3A0%7D,%22FLAG_OWN_REALTY%22%3A%7B%220%22%3A0%7D,%22INCOME_CREDIT_PERC%22%3A%7B%220%22%3A0.2336666978%7D,%22NAME_EDUCATION_TYPE%22%3A%7B%220%22%3A%22Secondary+%5C%2F+secondary+special%22%7D,%22NAME_FAMILY_STATUS%22%3A%7B%220%22%3A%22Married%22%7D,%22NAME_INCOME_TYPE%22%3A%7B%220%22%3A%22Working%22%7D,%22OCCUPATION_TYPE%22%3A%7B%220%22%3A%22Laborers%22%7D,%22ORGANIZATION_TYPE%22%3A%7B%220%22%3A%22Business+Entity+Type+3%22%7D,%22REG_CITY_NOT_LIVE_CITY%22%3A%7B%220%22%3A0%7D,%22REG_CITY_NOT_WORK_CITY%22%3A%7B%220%22%3A0%7D,%22REG_REGION_NOT_LIVE_REGION%22%3A%7B%220%22%3A0%7D,%22REG_REGION_NOT_WORK_REGION%22%3A%7B%220%22%3A0%7D,%22time_to_repay%22%3A%7B%220%22%3A17.2843295638%7D%7D
+    
+
 
 if __name__ == '__main__':
     model = joblib.load("support/models/model.sav") # Load "model.pkl"
