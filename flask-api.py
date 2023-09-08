@@ -101,7 +101,7 @@ def values_predict():
 
 
 if __name__ == '__main__':
-    model = joblib.load("support\models\model.sav") # Load "model.pkl"
+    model = joblib.load("support/models/model.sav") # Load "model.pkl"
     print ('Model loaded')
 
     important_features = [
