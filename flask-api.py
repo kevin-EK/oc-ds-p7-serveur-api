@@ -1,7 +1,6 @@
 from flask import Flask,  redirect, url_for ,request, jsonify
 import urllib3
 import pandas as pd
-import numpy as np
 import joblib
 import json
 
