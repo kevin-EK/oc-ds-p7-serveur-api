@@ -119,6 +119,32 @@ def index_predict():
     # https://oc-ds-p7-kevin-el-ce8c86036717.herokuapp.com/predict/index?idClient=100002
 
 
+
+
+@app.route('/predict/index_test',methods=['GET'])
+def index_predict_test():
+    # get index
+    idClient = int(request.args.get('idClient'))
+    # get data
+    try:
+        http = urllib3.PoolManager(ca_certs=certifi.where(),
+                                   retries=False)
+        r = http.request('GET',path_server+'/load_data')
+        resData = json.loads(r.data)
+    except Exception as e:
+        return f"loading api not available \n\n Une erreur s'est produite : {e}"
+
+    if idClient in resData['index']:
+        # filtered data
+        valideData = pd.DataFrame.from_dict(resData['data'])
+        valideData = valideData.loc[valideData.SK_ID_CURR == idClient,:].drop(columns = ['SK_ID_CURR','TARGET'])
+        return jsonify( {'data':valideData.to_json(orient="columns")})
+    else:
+        return 'Id non reconnu'
+
+
+
+
 @app.route('/predict/values',methods=['GET'])
 def values_predict():
     # get data
