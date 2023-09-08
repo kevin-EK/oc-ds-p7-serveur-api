@@ -100,7 +100,7 @@ def index_predict():
     idClient = int(request.args.get('idClient'))
     # get data
     try:
-        http = urllib3.PoolManager()
+        http = urllib3.PoolManager(retries=False)
         r = http.request('GET',path_server+'load_data')
         resData = json.loads(r.data)
     except Exception as e:
@@ -114,7 +114,7 @@ def index_predict():
     else:
         return 'Id non reconnu'
     # http://127.0.0.1:5000/predict/index?idClient=274986
-    # https://oc-ds-p7-kevin-el-ce8c86036717.herokuapp.com/
+    # https://oc-ds-p7-kevin-el-ce8c86036717.herokuapp.com/predict/index?idClient=100002
 
 
 @app.route('/predict/values',methods=['GET'])
