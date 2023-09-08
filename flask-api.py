@@ -3,6 +3,7 @@ import urllib3
 import pandas as pd
 import joblib
 import json
+import certifi
 
 app = Flask(__name__)
 
@@ -100,8 +101,9 @@ def index_predict():
     idClient = int(request.args.get('idClient'))
     # get data
     try:
-        http = urllib3.PoolManager(retries=False)
-        r = http.request('GET',path_server+'load_data')
+        http = urllib3.PoolManager(ca_certs=certifi.where(),
+                                   retries=False)
+        r = http.request('GET',path_server+'/load_data')
         resData = json.loads(r.data)
     except Exception as e:
         return f"loading api not available \n\n Une erreur s'est produite : {e}"
