@@ -1,1 +1,1 @@
-web: uvicorn flask-api:app --host 0.0.0.0 --port 80
+web: python backend/flask-api.py --host 0.0.0.0 --port 80
