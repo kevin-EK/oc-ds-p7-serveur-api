@@ -7,6 +7,11 @@ import joblib
 from evidently.report import Report
 from evidently.metrics import DataDriftTable
 from evidently.metrics import DatasetDriftMetric
+
+## ensemble de ligne de code permettant l'import de module présent dans le code parent
+import os, sys
+parent_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(parent_dir)
 from important_features import important_features
 
 st.markdown("# Evidently html import ❄️")
