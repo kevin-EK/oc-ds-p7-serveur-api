@@ -10,6 +10,9 @@ app = Flask(__name__)
 classify_mappings = {0: 'Bon client', 1: 'Client à risque'}
 path_server = 'oc-ds-p7-serveur-api.azurewebsites.net/'#'http://127.0.0.1:80/'
 
+@app.route("/")
+def helloworld():
+    return "<h1>Welcome to my api!</h1>"
 
 @app.route('/load-agg-data')
 def get_agg_data():
