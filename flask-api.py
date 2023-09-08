@@ -8,7 +8,8 @@ import json
 app = Flask(__name__)
 
 classify_mappings = {0: 'Bon client', 1: 'Client à risque'}
-path_server = 'http://127.0.0.1:5000/'
+path_server = 'oc-ds-p7-serveur-api.azurewebsites.net'#'http://127.0.0.1:80/'
+
 
 @app.route('/load-agg-data')
 def get_agg_data():
@@ -121,4 +122,4 @@ if __name__ == '__main__':
     ]
 
     
-    app.run(use_reloader = True)#debug=True, 
+    app.run(port = 80, use_reloader = True,debug=False)#debug=True, 
