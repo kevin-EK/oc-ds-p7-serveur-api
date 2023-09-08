@@ -8,7 +8,7 @@ import json
 app = Flask(__name__)
 
 classify_mappings = {0: 'Bon client', 1: 'Client à risque'}
-path_server = 'oc-ds-p7-serveur-api.azurewebsites.net/'#'http://127.0.0.1:80/'
+path_server = 'http://127.0.0.1:80/'
 
 @app.route("/")
 def helloworld():
