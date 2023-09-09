@@ -11,7 +11,7 @@ classify_mappings = {0: 'Bon client', 1: 'Client à risque'}
 path_server = 'https://oc-ds-p7-kevin-el-ce8c86036717.herokuapp.com'
 
 try:
-    model = joblib.load("mysite/support/models/model.sav") # Load "model.pkl"
+    model = joblib.load("support/models/model.sav") # Load "model.pkl"
     print ('Model loaded')
 except Exception as e:
         print(f"Une erreur s'est produite : {e}")
