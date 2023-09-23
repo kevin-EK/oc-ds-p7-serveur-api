@@ -1,1 +1,3 @@
 env_dashboard_p7
+__pycache__
+.pytest_cache
