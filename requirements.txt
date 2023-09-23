@@ -6,3 +6,5 @@ scikit-learn==1.2.2
 urllib3
 gunicorn
 certifi
+pytest==7.4.2
+pytest-mock
