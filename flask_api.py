@@ -1,6 +1,7 @@
 from flask import Flask,  redirect, url_for ,request, jsonify
 import urllib3
 import pandas as pd
+import numpy as np
 import joblib
 import json
 from important_features import important_features
@@ -54,7 +55,7 @@ def get_data():
 
         # Filtered columns
         #data = data[['SK_ID_CURR','TARGET']+columns_to_keep]
-
+        
         #feature ingenering
         data = data[data['CODE_GENDER'] != 'XNA']
         for bin_feature in ['CODE_GENDER', 'FLAG_OWN_CAR', 'FLAG_OWN_REALTY']:
@@ -85,6 +86,21 @@ def get_data():
     # http://127.0.0.1:5000/load_data
     
 
+@app.route('/predict/index2',methods=['GET'])
+def index_predict2():
+    # get index
+    idClient = int(request.args.get('idClient'))
+    http = urllib3.PoolManager()
+    r = http.request('GET',path_server+'load_data')
+    resData = json.loads(r.data)
+
+    if idClient in resData['index']:
+        # filtered data
+        valideData = pd.DataFrame.from_dict(resData['data'])
+        valideData = valideData.loc[valideData.SK_ID_CURR == idClient,:].drop(columns = ['SK_ID_CURR','TARGET'])
+    return jsonify(valideData.to_dict(orient="columns") )
+
+
 @app.route('/predict/index',methods=['GET'])
 def index_predict():
     # get index
@@ -104,8 +120,9 @@ def index_predict():
         return redirect(url_for('values_predict',values = valideData.to_json(orient="columns") ))
     else:
         return 'Id non reconnu'
-    # http://127.0.0.1:5000/predict/index?idClient=100002
+    # http://127.0.0.1:80/predict/index?idClient=116014
     # https://bienvoyons.pythonanywhere.com/predict/index?idClient=100002
+
 
 
 @app.route('/predict/values',methods=['GET'])
@@ -124,6 +141,6 @@ def values_predict():
     # https://bienvoyons.pythonanywhere.com/predict/values?values=%7B%22AMT_ANNUITY%22%3A%7B%220%22%3A16713.0%7D,%22AMT_CREDIT%22%3A%7B%220%22%3A288873.0%7D,%22AMT_INCOME_TOTAL%22%3A%7B%220%22%3A67500.0%7D,%22ANNUITY_INCOME_PERC%22%3A%7B%220%22%3A0.2476%7D,%22CNT_CHILDREN%22%3A%7B%220%22%3A0%7D,%22CODE_GENDER%22%3A%7B%220%22%3A0%7D,%22DAYS_BIRTH%22%3A%7B%220%22%3A-16963%7D,%22DAYS_EMPLOYED%22%3A%7B%220%22%3A-1746%7D,%22EXT_SOURCE_2%22%3A%7B%220%22%3A0.657665461%7D,%22EXT_SOURCE_3%22%3A%7B%220%22%3A0.7091891097%7D,%22FLAG_OWN_CAR%22%3A%7B%220%22%3A0%7D,%22FLAG_OWN_REALTY%22%3A%7B%220%22%3A0%7D,%22INCOME_CREDIT_PERC%22%3A%7B%220%22%3A0.2336666978%7D,%22NAME_EDUCATION_TYPE%22%3A%7B%220%22%3A%22Secondary+%5C%2F+secondary+special%22%7D,%22NAME_FAMILY_STATUS%22%3A%7B%220%22%3A%22Married%22%7D,%22NAME_INCOME_TYPE%22%3A%7B%220%22%3A%22Working%22%7D,%22OCCUPATION_TYPE%22%3A%7B%220%22%3A%22Laborers%22%7D,%22ORGANIZATION_TYPE%22%3A%7B%220%22%3A%22Business+Entity+Type+3%22%7D,%22REG_CITY_NOT_LIVE_CITY%22%3A%7B%220%22%3A0%7D,%22REG_CITY_NOT_WORK_CITY%22%3A%7B%220%22%3A0%7D,%22REG_REGION_NOT_LIVE_REGION%22%3A%7B%220%22%3A0%7D,%22REG_REGION_NOT_WORK_REGION%22%3A%7B%220%22%3A0%7D,%22time_to_repay%22%3A%7B%220%22%3A17.2843295638%7D%7D
 
 if __name__ == '__main__':
-    model = joblib.load("support/models/model.sav") # Load "model.pkl"
+    model = joblib.load("support/models/HistGradientBoostingClassifier_model.sav") # Load "model.pkl"
     print ('Model loaded')    
     app.run(port = 80, use_reloader = True,debug=False)#debug=True, 
