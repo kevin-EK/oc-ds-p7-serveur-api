@@ -9,7 +9,7 @@ from important_features import important_features
 app = Flask(__name__)
 
 classify_mappings = {0: 'Bon client', 1: 'Client à risque'}
-path_server = 'https://oc-ds-p7-kevin-el-ce8c86036717.herokuapp.com'#'http://127.0.0.1:80/'
+path_server = 'https://oc-ds-p7-kevin-el-ce8c86036717.herokuapp.com/'#'http://127.0.0.1:80/'
 
 @app.route("/")
 def helloworld():
@@ -85,22 +85,7 @@ def get_data():
         return 'Data NOT available!'
     # http://127.0.0.1:5000/load_data
     
-
-@app.route('/predict/index2',methods=['GET'])
-def index_predict2():
-    # get index
-    idClient = int(request.args.get('idClient'))
-    http = urllib3.PoolManager()
-    r = http.request('GET',path_server+'load_data')
-    resData = json.loads(r.data)
-
-    if idClient in resData['index']:
-        # filtered data
-        valideData = pd.DataFrame.from_dict(resData['data'])
-        valideData = valideData.loc[valideData.SK_ID_CURR == idClient,:].drop(columns = ['SK_ID_CURR','TARGET'])
-    return jsonify(valideData.to_dict(orient="columns") )
-
-
+    
 @app.route('/predict/index',methods=['GET'])
 def index_predict():
     # get index
