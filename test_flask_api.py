@@ -29,6 +29,6 @@ def test_get_data(client):
     # Vous pouvez ajouter d'autres assertions en fonction de la réponse JSON que vous attendez.
 
 def test_index_predict(client):
-    response = client.get('/predict/index?idClient=100002')
+    response = client.get('/predict/index?idClient=190814')
     assert response.status_code == 200
     # Vous pouvez ajouter d'autres assertions en fonction de la réponse JSON que vous attendez.
