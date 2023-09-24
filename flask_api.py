@@ -112,6 +112,7 @@ def index_predict():
 
 @app.route('/predict/values',methods=['GET'])
 def values_predict():
+    model = joblib.load("support/models/HistGradientBoostingClassifier_model.sav")
     # get data
     dict_data = request.args.get('values')
     # restructuration de la données
